@@ -82,7 +82,7 @@ var post = function post(req, res) {
         } else {
           registerGateway(cloud, newUser.uuid, function (err3, gateway) {
             if (err3) {
-              res.sendStatus(err2.status);
+              res.sendStatus(500);
             } else {
               users.setUser(newUser, function (err4) {
                 if (err4) {
