@@ -220,13 +220,14 @@ app.controller('DevicesController', function ($rootScope, $scope, $location, App
   };
 });
 
-app.controller('RebootController', function ($scope, $location, $interval, $state, $window, AppService) {
+app.controller('RebootController', function ($scope, $location, $interval, $state, $window, AppService, AuthService) {
   $scope.progress = function progress() {
     var promise;
     var MINUTE = 60000;
     $scope.countup = 0;
     promise = $interval(function onInterval() {
       if ($scope.countup >= 100) {
+        AuthService.signout();
         $interval.cancel(promise);
         $window.location.href = 'http://' + AppService.gatewayIp + ':8080';
       } else {
