@@ -20,6 +20,17 @@ var setUser = function setUser(user, done) {
   });
 };
 
+var updatePassword = function updatePassword(newPassword, done) {
+  User.findOneAndUpdate({}, { password: newPassword }, function (err, user) {
+    if (err) {
+      done(err);
+    } else {
+      done(null, user);
+    }
+  });
+};
+
+
 var getUserByUUID = function getUserByUUID(uuid, done) {
   User.findOne({ uuid: uuid }, function (err, user) {
     if (err) {
@@ -43,5 +54,6 @@ var getUserByEmail = function getUserByEmail(email, done) {
 module.exports = {
   setUser: setUser,
   getUserByEmail: getUserByEmail,
-  getUserByUUID: getUserByUUID
+  getUserByUUID: getUserByUUID,
+  updatePassword: updatePassword
 };

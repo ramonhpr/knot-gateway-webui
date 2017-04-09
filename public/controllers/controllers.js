@@ -56,6 +56,32 @@ app.controller('SignupController', function ($scope, $state, $http, SignupServic
   };
 });
 
+app.controller('ResetPassController', function ($scope, $state, AppService) {
+  $scope.hideButton = false;
+  $scope.reset = function reset() {
+    $scope.hideButton = true;
+    AppService.resetPassword($scope.form)
+      .then(function onSuccess() {
+        $scope.hideButton = false;
+        alert('A email have been sent to your account with the new password');
+        $state.go('app.admin');
+      }, function onError(err) {
+        $scope.hideButton = false;
+        if (err.status === 400) {
+          $state.go('cloud');
+        } else if (err.status === 401) {
+          alert('Error: Unauthorized');
+        } else if (err.status === 409) {
+          alert('Error: User not exists');
+        } else if (err.status === 500) {
+          alert('Error: cloud may not be running');
+        } else if (err.status === 503) {
+          alert('MongoError: failed to connect with database');
+        }
+      });
+  };
+});
+
 app.controller('AdminController', function ($rootScope, $scope, $location, $state, AppService) {
   var formData = {
     password: null,

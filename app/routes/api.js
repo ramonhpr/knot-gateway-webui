@@ -8,6 +8,7 @@ var devicesRoute = require('./devices');
 var radioRoute = require('./radio');
 var cloudRoute = require('./cloud');
 var signupRoute = require('./signup');
+var resetPassRoute = require('./resetPassword');
 
 router.use(authHelper.initialize());
 router.use('/auth', authHelper.authenticate());
@@ -16,6 +17,7 @@ router.use('/network', authHelper.authorize(), networkRoute.router);
 router.use('/devices', authHelper.authorize(), devicesRoute.router);
 router.use('/radio', authHelper.authorize(), radioRoute.router);
 router.use('/cloud', cloudRoute.router);
+router.use('/resetPass', resetPassRoute.router);
 router.use('/signup', signupRoute.router);
 
 module.exports = {

@@ -263,5 +263,18 @@ app.factory('AppService', function ($http) {
     });
   };
 
+  factory.resetPassword = function resetPassword(info) {
+    return $http({
+      method: 'POST',
+      url: '/api/resetPass',
+      data: info,
+      config: {
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8;'
+        }
+      }
+    });
+  };
+
   return factory;
 });

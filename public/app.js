@@ -20,6 +20,11 @@ app.config(function config($stateProvider, $urlRouterProvider, $httpProvider, RO
       templateUrl: 'views/signup.html',
       controller: 'SignupController'
     })
+    .state('resetPass', {
+      url: '/resetPass',
+      templateUrl: 'views/resetPass.html',
+      controller: 'ResetPassController'
+    })
     .state('app', {
       abstract: true,
       templateUrl: 'views/app.html',

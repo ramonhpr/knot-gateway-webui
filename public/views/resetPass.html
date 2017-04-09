@@ -1,0 +1,14 @@
+<div align="center" ng-init="init()">
+  <img src="img/knot_logo_green_background.png" class="round-image" />
+  <h2 class="banner">KNoT Gateway</h2>
+</div>
+<div>
+  <h2 class="banner small-font" align="center" >Put your email to reset your password</h2>
+</div>
+<div align="center" class="container home-container">
+  <form class="form-home" ng-submit="reset()">
+    <input type="text" id="inputEmail" class="form-control" placeholder="Email" ng-model="form.email" pattern='[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$' required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-hide="hideButton">Reset Password</button>
+    <p ng-show="hideButton">Sending email to user...</p>
+  </form>
+</div>
