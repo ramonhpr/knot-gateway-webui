@@ -31,7 +31,7 @@ app.factory('AuthService', function ($http, $sessionStorage, $window, ROLES) {
   };
 
   var loadToken = function loadToken() {
-    if ($sessionStorage.token) {
+    if ($sessionStorage.token && $sessionStorage.rasp) {
       currentUser = parseJwt($sessionStorage.token);
     }
   };
@@ -48,6 +48,7 @@ app.factory('AuthService', function ($http, $sessionStorage, $window, ROLES) {
       }
     }).then(function onSuccess(result) {
       $sessionStorage.token = result.data.token;
+      $sessionStorage.rasp = result.data.rasp;
       currentUser = result.data.user;
       return currentUser;
     });

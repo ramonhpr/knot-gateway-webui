@@ -8,6 +8,7 @@ var bCrypt = require('bcrypt-nodejs');
 
 var TOKEN_SECRET = require('../config').TOKEN_SECRET;
 var TOKEN_EXPIRATION = require('../config').TOKEN_EXPIRATION;
+var TOKEN_RASP = Math.random().toString(36).slice(-8);
 
 var isValidPassword = function (user, password) {
   return bCrypt.compareSync(password, user.password);
@@ -25,7 +26,8 @@ var createToken = function createToken(req, res, next) {
 var respond = function respond(req, res) {
   res.json({
     user: req.user,
-    token: req.token
+    token: req.token,
+    rasp: TOKEN_RASP
   });
 };
 
