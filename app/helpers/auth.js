@@ -9,11 +9,6 @@ var crypto = require('crypto');
 var TOKEN_SECRET = require('../config').TOKEN_SECRET;
 var TOKEN_EXPIRATION = require('../config').TOKEN_EXPIRATION;
 
-var isValidPassword = function (user, password) {
-  var hash = crypto.createHash('md5').update(password).digest('hex');
-  return hash === user.password;
-};
-
 var initialize = function initialize() {
   return passport.initialize();
 };
@@ -45,10 +40,12 @@ var authorize = function authorize() {
 // Configure passport
 passport.use(new LocalStrategy({ usernameField: 'email' },
   function (email, password, done) {
-    users.getUserByEmail(email, function onUserReturned(err, user) {
+    var hash = crypto.createHash('md5').update(password).digest('hex');
+    var credentials = { email: email, password: hash };
+    users.getUserByCredentials(credentials, function onUserReturned(err, user) {
       if (err) {
         return done(err);
-      } else if (!user || email !== user.email || !isValidPassword(user, password)) {
+      } else if (!user) {
         return done(null, false);
       }
 

@@ -30,8 +30,8 @@ var getUserByUUID = function getUserByUUID(uuid, done) {
   });
 };
 
-var getUserByEmail = function getUserByEmail(email, done) {
-  User.findOne({ email: email }, function (err, user) {
+var getUserByCredentials = function getUserByCredentials(credentials, done) {
+  User.findOne({ email: credentials.email, password: credentials.password }, function (err, user) {
     if (err) {
       done(err);
     } else {
@@ -42,6 +42,6 @@ var getUserByEmail = function getUserByEmail(email, done) {
 
 module.exports = {
   setUser: setUser,
-  getUserByEmail: getUserByEmail,
+  getUserByCredentials: getUserByCredentials,
   getUserByUUID: getUserByUUID
 };
