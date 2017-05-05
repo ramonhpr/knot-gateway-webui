@@ -5,6 +5,11 @@ var cloudConfig = require('../models/cloud');
 var settings = require('../models/settings');
 var request = require('request');
 var execFile = require('child_process').execFile;
+var crypto = require('crypto');
+
+var hashPassword = function (password) {
+  return crypto.createHash('md5').update(password).digest('hex');
+};
 
 var registerGateway = function (cloud, ownerUuid, cb) {
   request({
@@ -36,7 +41,7 @@ var registerUser = function (cloud, user, cb) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    form: { user: { email: user.email, password: user.password }, type: 'user' }
+    form: { user: { email: user.email, password: hashPassword(user.password) }, type: 'user' }
   }, function (err, response, body) {
     var data = {};
     var result;

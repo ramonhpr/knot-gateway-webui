@@ -4,12 +4,14 @@ var LocalStrategy = require('passport-local');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var users = require('../models/users');
+var crypto = require('crypto');
 
 var TOKEN_SECRET = require('../config').TOKEN_SECRET;
 var TOKEN_EXPIRATION = require('../config').TOKEN_EXPIRATION;
 
 var isValidPassword = function (user, password) {
-  return password === user.password;
+  var hash = crypto.createHash('md5').update(password).digest('hex');
+  return hash === user.password;
 };
 
 var initialize = function initialize() {
