@@ -7,6 +7,7 @@ var angular = require('angular');
 require('@uirouter/angularjs');
 require('angular-ui-bootstrap');
 require('angular-permission');
+require('angular-material');
 require('ng-storage');
 
 // Styles
@@ -19,7 +20,7 @@ require('./services.js');
 require('./controllers.js');
 
 app = angular.module('app', ['ui.router', 'permission', 'permission.ui', 'ngStorage', 'ui.bootstrap',
-                             'app.controllers', 'app.services', 'app.directives']); // eslint-disable-line indent
+                             'app.controllers', 'app.services', 'app.directives', 'ngMaterial']); // eslint-disable-line indent
 
 app.config(function config($stateProvider, $urlRouterProvider, $httpProvider, ROLES) {
   $stateProvider

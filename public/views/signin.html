@@ -10,7 +10,10 @@
     <input type="email" class="form-control" placeholder="E-mail" ng-model="form.email" required>
     <input type="password" class="form-control" placeholder="Password" ng-model="form.password" required>
     <button class="btn btn-lg btn-primary btn-block" type="submit" ng-hide="hideButton">Sign in</button>
-    <p ng-show="hideButton">Authenticating user...</p>
+    <div ng-show="hideButton" layout="row" layout-sm="column" layout-align="space-around">
+      <p>Authenticating user...</p>
+      <md-progress-circular  md-mode="indeterminate" ></md-progress-circular>
+    </div>
   </form>
   <a ui-sref="signup">Create account</a>
 </div>

@@ -306,3 +306,7 @@ input
 a[ng-click] {
   cursor: pointer;
 }
+md-progress-circular svg path 
+{
+  stroke: #267a1a;
+}
