@@ -15,6 +15,11 @@ var PORT = process.env.PORT || 8080;
 var TOKEN_SECRET = process.env.TOKEN_SECRET;
 var TOKEN_EXPIRATION = 120 * 60;
 
+// Validate input
+var REGEX_OWNER = /(\w){8}-(\w){4}-(\w){4}-(\w){4}-(\w){8}0000$/;
+var REGEX_MAC = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+var REGEX_TOKEN = /^(\w){40}$/;
+
 module.exports = {
   // Configuration files
   DEVICES_FILE: DEVICES_FILE,
@@ -29,5 +34,10 @@ module.exports = {
   // Server configuration
   PORT: PORT,
   TOKEN_SECRET: TOKEN_SECRET,
-  TOKEN_EXPIRATION: TOKEN_EXPIRATION
+  TOKEN_EXPIRATION: TOKEN_EXPIRATION,
+
+  // Validate input
+  REGEX_OWNER: REGEX_OWNER,
+  REGEX_TOKEN: REGEX_TOKEN,
+  REGEX_MAC: REGEX_MAC
 };
