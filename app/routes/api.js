@@ -1,5 +1,6 @@
 var router = require('express').Router(); // eslint-disable-line new-cap
 
+var celebrate = require('celebrate');
 var auth = require('../auth');
 
 var adminRoute = require('./admin');
@@ -9,6 +10,7 @@ var cloudRoute = require('./cloud');
 var signupRoute = require('./signup');
 
 router.use(auth.initialize());
+router.use(celebrate.errors());
 router.use('/auth', auth.authenticate());
 router.use('/admin', auth.authorize(), adminRoute.router);
 router.use('/network', auth.authorize(), networkRoute.router);
