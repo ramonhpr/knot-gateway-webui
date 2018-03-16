@@ -2,7 +2,10 @@ var dbus = require('dbus');
 
 var SERVICE_NAME = 'br.org.cesar.knot';
 var DEVICE_INTERFACE_NAME = 'br.org.cesar.knot.Device1';
-var DEVICE_OBJECT_PATH = '/br/org/cesar/knot/Device1';
+var DEVICE_OBJECT_PATH = '/';
+
+var OBJECT_MANAGER_INTERFACE = 'org.freedesktop.DBus.ObjectManager';
+
 var properties = {
   id: '1234',
   name: 'KNoT Device',
@@ -14,7 +17,7 @@ function createDevicesInterface(object) {
   var devicesInterface = object.createInterface(DEVICE_INTERFACE_NAME);
 
   // Methods
-  devicesInterface.addMethod('Pair', { in: [{ type: 'a{sv}' }] }, function (callback) {
+  devicesInterface.addMethod('Pair', { in: [ dbus.Define(Object) ] }, function (callback) {
     console.log('Pair method called');
     callback(null, null);
   });
@@ -49,13 +52,24 @@ function createDevicesInterface(object) {
     }
   });
   devicesInterface.update();
-  console.log('KNoTd started');
+}
+
+function createObjManagerInterface(object) {
+  var objManagerInterface = object.createInterface(OBJECT_MANAGER_INTERFACE);
+  // Methods
+  objManagerInterface.addMethod('GetManagedObjects',
+    { out: 'a{oa{sa{sv}}}' }, function(callback) {
+      callback(null, 'hello');
+  });
+  objManagerInterface.update();
 }
 
 function main() {
   var service = dbus.registerService('system', SERVICE_NAME);
   var object = service.createObject(DEVICE_OBJECT_PATH);
   createDevicesInterface(object);
+  createObjManagerInterface(object);
+  console.log('KNoTd started');
 }
 
 main();
