@@ -1,8 +1,13 @@
 var fs = require('fs');
-var dbus = require('dbus-native');
+// var dbus = require('dbus-native');
+var DBus = require('dbus');
 var config = require('config');
 
 var DEVICES_FILE = config.get('nrfd.devicesFile');
+var SERVICE_NAME = "br.org.cesar.knot";
+var OBJECT_MANAGER_INTERFACE = "org.freedesktop.DBus.ObjectManager";
+var DEVICE_INTERFACE = "br.org.cesar.knot.Device1";
+var OBJECT_PATH = '/';
 
 var DevicesServiceError = function DevicesServiceError(message) {
   this.name = 'DevicesServiceError';
@@ -24,49 +29,39 @@ var DevicesService = function DevicesService() { // eslint-disable-line vars-on-
 };
 
 function getAllowedDevices(done) {
-  fs.readFile(DEVICES_FILE, 'utf8', function onRead(readErr, data) {
-    var file;
-
-    if (readErr) {
-      done(readErr);
-      return;
-    }
-
-    try {
-      file = JSON.parse(data);
-
-      done(null, file.keys);
-    } catch (parseErr) {
-      done(parseErr);
+  var dbus = new DBus();
+  var bus = dbus.getBus('system');
+  bus.getInterface(SERVICE_NAME, OBJECT_PATH, OBJECT_MANAGER_INTERFACE, function (err, iface) {
+    if(err) {
+      done(err);
+    } else {
+      iface.GetManagedObjects(null, function (err2, result) {
+        var devices = [];
+        for( obj_path in result) {
+          if (obj_path !== '/') {
+            for( interface in result[obj_path]) {
+              if (interface === DEVICE_INTERFACE)
+                devices.push(result[obj_path][DEVICE_INTERFACE]);
+            }
+          }
+        }
+        bus.disconnect();
+        done(null, devices);
+      });
     }
   });
 }
 
 function getNearbyDevices(done) {
-  var sysbus = dbus.systemBus();
-  sysbus.invoke({
-    path: '/org/cesar/knot/nrf0',
-    destination: 'org.cesar.knot.nrf',
-    interface: 'org.cesar.knot.nrf0.Adapter',
-    member: 'GetBroadcastingDevices',
-    signature: '',
-    body: [],
-    type: dbus.messageType.methodCall
-  }, function onResult(dbusErr, res) {
-    var devices;
-    var devicesErr;
-
-    if (dbusErr) {
-      devicesErr = parseDbusError(dbusErr);
-      done(devicesErr);
-      return;
-    }
-
-    try {
-      devices = JSON.parse(res);
-      done(null, devices);
-    } catch (parseErr) {
-      done(parseErr);
+  var dbus = new DBus();
+  var bus = dbus.getBus('system');
+  bus.getInterface(SERVICE_NAME, OBJECT_PATH, OBJECT_MANAGER_INTERFACE, function (err, iface) {
+    if(err) {
+      done(err);
+    } else {
+      iface.GetManagedObjects(null, function (err2, devices) {
+        done(null, devices);
+      });
     }
   });
 }
@@ -170,6 +165,20 @@ DevicesService.prototype.update = function update(device, done) {
     removeDevice(device, done);
   }
 };
+
+getAllowedDevices(function (err, result) {
+  if (err) {
+    console.error(err);
+  } else {
+    // console.log('------');
+
+    result.forEach(function (element) {
+      if (element.Online === false) {
+
+      }
+    })
+  }
+})
 
 module.exports = {
   DevicesService: DevicesService,
