@@ -3,7 +3,7 @@ var request = require('request');
 var config = require('config');
 var dotenv = require('dotenv');
 var exec = require('child_process').exec;
-
+var meshblu = require('meshblu');
 var FOG_HOST = config.get('fog.host');
 var FOG_PORT = config.get('fog.port');
 var FOG_DOTENV_FILE = config.get('fog.envFile');
@@ -222,6 +222,42 @@ FogService.prototype.getDeviceData = function getDeviceData(user, uuid, done) {
     } catch (parseErr) {
       done(parseErr);
     }
+  });
+};
+
+FogService.prototype.setDeviceData = function setDeviceData(user, uuid, value, done) {
+  const conn = meshblu.createConnection({
+    server: FOG_HOST,
+    port: FOG_PORT,
+    uuid: user.uuid,
+    token: user.token,
+  });
+
+  conn.on('ready', () => {
+    console.log(`Setting data item from sensor 1 on thing ${uuid}`);
+    conn.update({
+      uuid: uuid,
+      set_data: [{
+        sensor_id: 1,
+        value: value //!isNaN(value) ? parseFloat(value) : ((value === 'true') || false), // eslint-disable-line no-restricted-globals
+      }],
+    }, (result) => {
+      console.log(`Name: ${JSON.stringify(result.name, null, 2)}`);
+      console.log(`Type: ${JSON.stringify(result.type, null, 2)}`);
+      console.log(`UUID: ${JSON.stringify(result.uuid, null, 2)}`);
+      console.log(`Online: ${JSON.stringify(result.online, null, 2)}`);
+      console.log(`ID: ${JSON.stringify(result.set_data[0].sensor_id, null, 2)}`);
+      console.log(`Value: ${JSON.stringify(result.set_data[0].value, null, 2)}`);
+      console.log();
+      conn.close(() => {});
+      done(null, result);
+    });
+  });
+
+  conn.on('notReady', () => {
+    console.log('Connection not authorized');
+    conn.close(() => {});
+    done(parseResponseError('notReady'));
   });
 };
 

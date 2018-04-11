@@ -8,6 +8,7 @@ var devicesSchemas = require('../schemas/devices');
 
 router.get('/', state.onlyWhenReady, auth.authorize(), devicesCtrl.list);
 router.get('/:id', state.onlyWhenReady, auth.authorize(), celebrate(devicesSchemas.get), devicesCtrl.get);
+router.post('/:id', state.onlyWhenReady, auth.authorize(), celebrate(devicesSchemas.post), devicesCtrl.post);
 router.put('/:id', state.onlyWhenReady, auth.authorize(), celebrate(devicesSchemas.update), devicesCtrl.update);
 
 module.exports = {

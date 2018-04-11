@@ -101,6 +101,33 @@ var get = function get(req, res, next) {
   });
 };
 
+var post = function post(req, res, next) {
+  var fogSvc = new FogService();
+  users.getUserByUUID(req.user.uuid, function onUser(userErr, user) {
+    if (userErr) {
+      next(userErr);
+    } else {
+      fogSvc.getDevice(user, req.body.uuid, function onDeviceReturned(fogErr, fogDevice) {
+        if (fogErr) {
+          next(fogErr);
+        } else if (!fogDevice) {
+          res.sendStatus(404);
+        } else {
+          fogSvc.setDeviceData(user, req.body.uuid, !req.body.value, function onDeviceDataReturned(fogErr2, fogDeviceData) { // eslint-disable-line max-len
+            var device;
+            if (fogErr2) {
+              next(fogErr);
+            } else {
+              // device = mapToDeviceWithData(fogDevice, fogDeviceData);
+              res.json(device);
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
 var add = function add(req, res, next) {
   var devicesSvc = new DevicesService();
   var device = {
@@ -152,6 +179,7 @@ var update = function update(req, res, next) {
 
 module.exports = {
   get: get,
+  post: post,
   list: list,
   update: update
 };

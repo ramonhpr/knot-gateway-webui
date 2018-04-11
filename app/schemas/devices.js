@@ -31,8 +31,28 @@ var update = {
   }
 };
 
+var post = {
+  body: {
+    value: joi
+      .bool()
+      .required(),
+    uuid: joi
+      .string()
+  },
+  params: {
+    id: joi
+      .alternatives()
+      .try(
+        joi.string().regex(REGEX_MAC),
+        joi.string().uuid()
+      )
+      .required()
+  }
+};
+
 
 module.exports = {
   get: get,
+  post: post,
   update: update
 };
