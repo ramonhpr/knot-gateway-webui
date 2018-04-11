@@ -22,6 +22,9 @@
           </p>
           <p ng-class="{ 'text-muted': !device.online }" ng-repeat="schema in device.schema">
             <small><b>{{ schema.name }}</b></small>: <small>{{ schema.data ? schema.data.value : '?' }}</small>
+            <a href="#" api-click="setDevice(device, schema)" api-click-state="$api" ng-disabled="$api.$pending" aria-label="Set Device Data">
+              <span class="glyphicon glyphicon-lamp" aria-hidden="true"></span>
+            </a>
           </p>
         </div>
         <div class="device-footer">

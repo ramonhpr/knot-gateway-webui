@@ -265,10 +265,16 @@ appCtrls.controller('DevicesController', function DevicesController($scope, $q, 
       });
   };
 
+  $scope.setDevice = function setDevice(device, schema) {
+    return GatewayApi.setDevice(device, schema)
+      .then(function onFulfilled() {
+        return reloadDevices();
+      });
+  };
+
   $scope.$on('$destroy', function onDestroy() {
     stopRefresh();
   });
 
   init();
 });
-

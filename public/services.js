@@ -139,6 +139,13 @@ appServices.factory('GatewayApi', function GatewayApi($http) {
       .then(extractData);
   };
 
+  var setDevice = function setDevice(device, schema) {
+    return $http.post('/api/devices/' + device.uuid, {
+      id: device.mac,
+      uuid: device.uuid,
+      value: schema.data.value
+    }); //.then(extractData);
+  };
   var getDeviceDetail = function getDeviceDetail(device) {
     return $http.get('/api/devices/' + device.uuid)
       .then(extractData);
@@ -174,6 +181,7 @@ appServices.factory('GatewayApi', function GatewayApi($http) {
 
     updateDevice: updateDevice,
     getDevices: getDevices,
+    setDevice: setDevice,
     getDeviceDetail: getDeviceDetail,
 
     getGatewayConfig: getGatewayConfig,
