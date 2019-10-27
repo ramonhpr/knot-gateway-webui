@@ -1,8 +1,10 @@
-hash: be59c1cee1ff6dfd6bd904be273f51262263ee7bcef92812cc3b492b59b38250
-updated: 2019-08-13T01:07:44.498965-03:00
+hash: 3d15f17b3764f14d0878c9c4e9d410f1a5e3276f8d8a84a7817095471204e7b4
+updated: 2019-10-28T12:30:06.061244557-03:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: 1485a34d5d5723fea214f5710708e19a831720e4
+- name: github.com/godbus/dbus
+  version: 37bf87eef99d69c4f1d3528bd66e3a87dc201472
 - name: github.com/gorilla/mux
   version: 00bdffe0f3c77e27d2cf6f5c70232a2d3e4d9c15
 - name: github.com/hashicorp/hcl
@@ -26,7 +28,7 @@ imports:
 - name: github.com/pelletier/go-toml
   version: 84da2c4a25c585816f2c4211b699228d111d18ab
 - name: github.com/sirupsen/logrus
-  version: de736cf91b921d56253b4010270681d33fdf7cb5
+  version: 67a7fdcf741f4d5cee82cb9800994ccfd4393ad0
 - name: github.com/spf13/afero
   version: 588a75ec4f32903aa5e39a2619ba6a4631e28424
   subpackages:
