@@ -20,7 +20,11 @@ func main() {
 	}
 
 	logger.Info("Connect on dbus system", ds)
-	devices := ds.ListDevices()
+	devices, err := ds.ListDevices()
+	if err != nil {
+		logger.Error(err)
+	}
+
 	for _, device := range devices {
 		logger.Infof("Id: %s Name: %s\n", device.Id, device.Name)
 	}

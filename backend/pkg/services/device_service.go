@@ -27,19 +27,19 @@ func NewDeviceService() (*DeviceService, error) {
 	return &DeviceService{conn: conn}, nil
 }
 
-func getManagedObjects(ds *DeviceService) map[dbus.ObjectPath]map[string]map[string]dbus.Variant {
+func getManagedObjects(ds *DeviceService) (map[dbus.ObjectPath]map[string]map[string]dbus.Variant, error) {
 	var objects map[dbus.ObjectPath]map[string]map[string]dbus.Variant
 	err := ds.conn.Object(SERVICE_NAME, OBJECT_PATH).Call(OBJECT_MANAGER_INTERFACE_NAME+".GetManagedObjects", 0).Store(&objects)
-	if err != nil {
-		panic(err)
-	}
 
-	return objects
+	return objects, err
 }
 
-func (ds *DeviceService) ListDevices() []entities.Device {
+func (ds *DeviceService) ListDevices() ([]entities.Device, error) {
 	var list []entities.Device
-	objects := getManagedObjects(ds)
+	objects, err := getManagedObjects(ds)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, dict := range objects {
 		for iface, dev := range dict {
@@ -57,5 +57,5 @@ func (ds *DeviceService) ListDevices() []entities.Device {
 		}
 	}
 
-	return list
+	return list, nil
 }
