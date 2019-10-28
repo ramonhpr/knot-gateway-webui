@@ -20,7 +20,10 @@ func main() {
 	}
 
 	logger.Info("Connect on dbus system", ds)
-	services.GetManagedObjects(ds)
+	devices := ds.ListDevices()
+	for _, device := range devices {
+		logger.Infof("Id: %s Name: %s\n", device.Id, device.Name)
+	}
 
 	server := server.New(config.Server.Port)
 	server.Start()

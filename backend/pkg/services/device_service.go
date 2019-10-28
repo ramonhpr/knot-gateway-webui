@@ -1,6 +1,7 @@
 package services
 
 import "github.com/godbus/dbus"
+import "github.com/CESARBR/knot-gateway-webui/backend/pkg/entities"
 
 const (
 	SERVICE_NAME                  = "br.org.cesar.knot"
@@ -26,7 +27,7 @@ func NewDeviceService() (*DeviceService, error) {
 	return &DeviceService{conn: conn}, nil
 }
 
-func GetManagedObjects(ds *DeviceService) map[dbus.ObjectPath]map[string]map[string]dbus.Variant {
+func getManagedObjects(ds *DeviceService) map[dbus.ObjectPath]map[string]map[string]dbus.Variant {
 	var objects map[dbus.ObjectPath]map[string]map[string]dbus.Variant
 	err := ds.conn.Object(SERVICE_NAME, OBJECT_PATH).Call(OBJECT_MANAGER_INTERFACE_NAME+".GetManagedObjects", 0).Store(&objects)
 	if err != nil {
@@ -34,4 +35,27 @@ func GetManagedObjects(ds *DeviceService) map[dbus.ObjectPath]map[string]map[str
 	}
 
 	return objects
+}
+
+func (ds *DeviceService) ListDevices() []entities.Device {
+	var list []entities.Device
+	objects := getManagedObjects(ds)
+
+	for _, dict := range objects {
+		for iface, dev := range dict {
+			if iface == DEVICE_INTERFACE_NAME {
+				if dev["Id"].Value() != nil {
+					list = append(list, entities.Device{
+						Id:         dev["Id"].String(),
+						Name:       dev["Name"].String(),
+						Online:     dev["Online"].Value().(bool),
+						Registered: dev["Registered"].Value().(bool),
+						Paired:     dev["Paired"].Value().(bool),
+					})
+				}
+			}
+		}
+	}
+
+	return list
 }
