@@ -25,3 +25,13 @@ func NewDeviceService() (*DeviceService, error) {
 
 	return &DeviceService{conn: conn}, nil
 }
+
+func GetManagedObjects(ds *DeviceService) map[dbus.ObjectPath]map[string]map[string]dbus.Variant {
+	var objects map[dbus.ObjectPath]map[string]map[string]dbus.Variant
+	err := ds.conn.Object(SERVICE_NAME, OBJECT_PATH).Call(OBJECT_MANAGER_INTERFACE_NAME+".GetManagedObjects", 0).Store(&objects)
+	if err != nil {
+		panic(err)
+	}
+
+	return objects
+}

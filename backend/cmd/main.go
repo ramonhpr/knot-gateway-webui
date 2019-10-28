@@ -18,7 +18,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	logger.Info("Connect on dbus system")
+
+	logger.Info("Connect on dbus system", ds)
+	services.GetManagedObjects(ds)
 
 	server := server.New(config.Server.Port)
 	server.Start()
